@@ -13,3 +13,17 @@ class Message(models.Model):
     time = models.DateTimeField(auto_now_add=True)
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='messages')
     is_edited = models.BooleanField(default=False)
+
+
+def get_last_message(self):
+    """
+    :param self: user object
+    :return: time of last message sent by user or None if no messages
+    """
+    last_message = self.message_set.order_by('time').last()
+    if last_message is None:
+        return None
+    return last_message.time
+
+
+User.add_to_class('last_message_time', get_last_message)

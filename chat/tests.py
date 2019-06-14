@@ -358,3 +358,17 @@ class CreateMessageTest(APITestCase):
         msg = Message.objects.get(id=1)
         self.assertEquals(msg.text, 'Hello, world!')
         self.assertEquals(msg.sender.username, 'User1')
+
+    def test_send_message_you_are_not_participant_of_chat_fail(self):
+        Chat.objects.get(id=1).participants.remove(User.objects.get(username='User1'))
+        url = reverse('create-message-view')
+        data = {
+            'text': 'Hello, world!',
+            'chat_id': 1
+        }
+
+        response = self.client.post(url, data=data)
+
+        self.assertEquals(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEquals(response.data['error'],
+                          "You can't send messages to chats where are you not participate")

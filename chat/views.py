@@ -88,7 +88,7 @@ class MessageView(ModelViewSet):
                             status.HTTP_400_BAD_REQUEST)
 
         if not chat.participants.filter(id=request.user.id).exists():
-            Response({'error': "You can't send messages to chats where are you not participate"},
+            return Response({'error': "You can't send messages to chats where are you not participate"},
                      status.HTTP_403_FORBIDDEN)
 
         Message(
